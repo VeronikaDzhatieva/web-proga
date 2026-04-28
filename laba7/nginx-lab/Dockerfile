@@ -1,14 +1,22 @@
 FROM php:8.2-fpm
 
-RUN apt-get update && apt-get install -y unzip git curl \
-    && docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install pdo pdo_mysql
+RUN apt-get update && apt-get install -y \
+    zip \
+    unzip \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html
-COPY ./www /var/www/html
+RUN mkdir -p /var/www/html/tests/logs && chmod 777 /var/www/html/tests/logs
 
-RUN composer install
+WORKDIR /var/www/html
+
+COPY ./www /var/www/html
+COPY ./tests /var/www/html/tests
+
+COPY phpunit.xml /var/www/html/phpunit.xml 2>/dev/null || true
 
 CMD ["php-fpm"]
