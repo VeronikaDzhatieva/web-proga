@@ -1,0 +1,9 @@
+services:
+  php:
+    build: .
+    volumes:
+      - ./code:/var/www/html/code
+      - ./tests:/var/www/html/tests
+      - ./composer.json:/var/www/html/composer.json
+      - ./phpunit.xml.dist:/var/www/html/phpunit.xml.dist
+    working_dir: /var/www/html
