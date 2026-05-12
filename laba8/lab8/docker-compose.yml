@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  app:
+    image: php:8.2-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+    environment:
+      DB_HOST: localhost
+      DB_NAME: test_db
+      DB_USER: test_user
+      DB_PASSWORD: test_pass
