@@ -1,0 +1,31 @@
+name: PHP docker CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker images
+        run: docker compose build
+
+      - name: Start containers
+        run: docker compose up -d
+
+      - name: Install Composer dependencies
+        run: docker compose exec -T php composer install
+
+      - name: Run PHPUnit tests
+        run: docker compose exec -T php vendor/bin/phpunit tests
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down
